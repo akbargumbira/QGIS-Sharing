@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>QGIS - {% block extratitle %}{% endblock %}</title>
+  <meta name="AUTHOR" content="ItOpen" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    {% block extracss %}{% endblock %}
+    {% block extrajs %}{% endblock %}
+</head>
+
+<body id="page_bg" {% block onload %}{% endblock %}>
+    <div id="main_bg">
+        {% block navigation %}
+        {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+
+        {% block rightbar %}
+        {% endblock %}
+    </div>
+</body>
+</html>

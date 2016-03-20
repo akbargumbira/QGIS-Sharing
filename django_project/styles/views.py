@@ -15,7 +15,7 @@ from django.template import RequestContext
 from django.core.servers.basehttp import FileWrapper
 
 def index(request):
-    return render_to_response("/styles/st_index.html", {}, context_instance=RequestContext(request) )
+    return render_to_response("styles/st_index.html", {}, context_instance=RequestContext(request) )
 
 def download(request, pk):
     ''' return the xml file for the specific style '''
@@ -92,7 +92,7 @@ def add_style(request):
 
     else:
         form = StyleUploadForm()
-    return render_to_response('/styles/st_upload.html', {'form' : form, }, context_instance=RequestContext(request))
+    return render_to_response('styles/st_upload.html', {'form' : form, }, context_instance=RequestContext(request))
 
 def upload_thanks(request):
     op = "Your style has been added to the repository. <a href=\"/styles/\">Click Here</a> to go back."

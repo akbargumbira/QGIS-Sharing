@@ -15,7 +15,7 @@ from xml.dom.minidom import getDOMImplementation, parseString
 
 def index(request):
     op = "Be hell with the home page"
-    return render_to_response("/symbols/s_index.html", {}, context_instance=RequestContext(request) )
+    return render_to_response("symbols/s_index.html", {}, context_instance=RequestContext(request) )
 
 def tags(request):
     queryset = TaggedItem.objects.filter(content_type__app_label="symbols")
@@ -115,7 +115,7 @@ def add_symbol(request):
             return HttpResponseRedirect('/symbols/up_thanks/')
     else:
         form = SymbolUploadForm()
-    return render_to_response('/symbols/s_upload.html', {'form' : form, }, context_instance=RequestContext(request))
+    return render_to_response('symbols/s_upload.html', {'form' : form, }, context_instance=RequestContext(request))
 
 def upload_thanks(request):
     op = "Your symbols has been added to the repository. <a href=\"/symbols/\">Click Here</a> to go back."

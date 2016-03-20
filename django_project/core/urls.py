@@ -17,6 +17,18 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(
+        r'^accounts/login/$', 'django.contrib.auth.views.login',
+        {'template_name': 'admin/login.html'},
+        name='my_login',
+    ),
+    url(
+        r'^accounts/logout/$',
+        'django.contrib.auth.views.logout',
+        name='my_logout',
+
+    ),
+
     # Symbols
     url(r'^symbols/', include('symbols.urls')),
     # Styles

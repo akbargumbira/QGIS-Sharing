@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import patterns, url
 
-urlpatterns = patterns('symbols.views',
+urlpatterns = patterns(
+        'symbols.views',
         url(r'^$','index'),
 
         # XML Responses for desktop

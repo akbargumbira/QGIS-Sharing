@@ -1,74 +1,108 @@
-PROJECT_ID := qgis-sharing
+PROJECT_ID := qgissharing
 
 SHELL := /bin/bash
 
 
 # ----------------------------------------------------------------------------
-#    D E V E L O P M E N T S    C O M M A N D S
+#    C O M M A N D S
 # ----------------------------------------------------------------------------
-dev-deploy: dev-build dev-run dev-superuser
-
-dev-run: dev-web dev-makemigrations dev-migrate
-
-dev-status:
+status:
 	@echo
 	@echo "-------------------------------------------------------------------"
-	@echo "Status of all running development containers"
+	@echo "Status of all running staging containers"
 	@echo "-------------------------------------------------------------------"
-	@docker-compose -p dev-$(PROJECT_ID) ps
+	@docker-compose -p $(PROJECT_ID) ps
 
-dev-build:
+run: build web migrate collectstatic
+
+deploy: run superuser
 	@echo
 	@echo "------------------------------------------------------------------"
-	@echo "Building dev"
+	@echo "Bringing up fresh staging instance "
+	@echo "You can access it on http://localhost:61201"
 	@echo "------------------------------------------------------------------"
-	@docker-compose -p dev-$(PROJECT_ID) build
 
-dev-web:
+build:
 	@echo
 	@echo "------------------------------------------------------------------"
-	@echo "Running web dev mode"
+	@echo "Building in staging mode"
 	@echo "------------------------------------------------------------------"
-	@docker-compose -p dev-$(PROJECT_ID) up -d devweb
+	@docker-compose -p $(PROJECT_ID) build
 
-dev-shell:
+web:
 	@echo
 	@echo "------------------------------------------------------------------"
-	@echo "Shelling in in dev"
+	@echo "Running in staging mode"
 	@echo "------------------------------------------------------------------"
-	@docker-compose -p dev-$(PROJECT_ID) run devweb python manage.py shell
+	@docker-compose -p $(PROJECT_ID) up -d web
 
-dev-makemigrations:
+migrate:
+	@echo
+	@echo "------------------------------------------------------------------"
+	@echo "Running migrate static in staging mode"
+	@echo "------------------------------------------------------------------"
+	@docker-compose -p $(PROJECT_ID) run uwsgi python manage.py	migrate
+
+collectstatic:
+	@echo
+	@echo "------------------------------------------------------------------"
+	@echo "Collecting static in staging mode"
+	@echo "------------------------------------------------------------------"
+	@docker exec -t -i $(PROJECT_ID)_uwsgi_1 python manage.py collectstatic --noinput
+
+superuser:
+	@echo
+	@echo "------------------------------------------------------------------"
+	@echo "Creating a superuser in staging mode"
+	@echo "------------------------------------------------------------------"
+	@docker-compose -p $(PROJECT_ID) run uwsgi python manage.py createsuperuser
+
+loaddata:
 	@echo
 	@echo "-------------------------------------------------------------------"
-	@echo "Run makemigrations"
+	@echo "Load specified fixture"
 	@echo "-------------------------------------------------------------------"
-	@docker-compose -p dev-$(PROJECT_ID) run devweb python manage.py makemigrations
+	@read -p "Enter the fixture:" fixture; \
+	docker-compose -p $(PROJECT_ID) run uwsgi python manage.py loaddata $$fixture
 
-dev-migrate:
-	@echo
-	@echo "-------------------------------------------------------------------"
-	@echo "Run migrate"
-	@echo "-------------------------------------------------------------------"
-	@docker-compose -p dev-$(PROJECT_ID) run devweb python manage.py migrate
-
-dev-superuser:
+kill:
 	@echo
 	@echo "------------------------------------------------------------------"
-	@echo "Creating a superuser in development mode"
+	@echo "Killing in staging mode"
 	@echo "------------------------------------------------------------------"
-	@docker-compose -p dev-$(PROJECT_ID) run devweb python manage.py createsuperuser
+	@docker-compose -p $(PROJECT_ID) kill
 
-dev-kill:
+rm: kill
 	@echo
 	@echo "------------------------------------------------------------------"
-	@echo "Killing dev"
+	@echo "Removing staging instance!!! "
 	@echo "------------------------------------------------------------------"
-	@docker-compose -p dev-$(PROJECT_ID) kill
+	@docker-compose -p $(PROJECT_ID) rm
 
-dev-rm: dev-kill
+logs:
 	@echo
 	@echo "------------------------------------------------------------------"
-	@echo "Removing dev! "
+	@echo "Showing uwsgi logs in staging mode"
 	@echo "------------------------------------------------------------------"
-	@docker-compose -p dev-$(PROJECT_ID) rm
+	@docker-compose -p $(PROJECT_ID) logs uwsgi
+
+weblogs:
+	@echo
+	@echo "------------------------------------------------------------------"
+	@echo "Showing web logs"
+	@echo "------------------------------------------------------------------"
+	@docker-compose -p $(PROJECT_ID) logs web
+
+shell:
+	@echo
+	@echo "------------------------------------------------------------------"
+	@echo "Shelling"
+	@echo "------------------------------------------------------------------"
+	@docker-compose -p $(PROJECT_ID) run uwsgi /bin/bash
+
+dbshell:
+	@echo
+	@echo "------------------------------------------------------------------"
+	@echo "Shelling"
+	@echo "------------------------------------------------------------------"
+	@docker exec -t -i $(PROJECT_ID)_db_1 psql -U docker -h localhost postgres

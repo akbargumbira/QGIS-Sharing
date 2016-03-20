@@ -7,16 +7,35 @@ db:
   volumes:
     - ./postgresql/data:/var/lib/postgresql/data
 
-devweb:
+uwsgi:
   build: docker
   dockerfile: Dockerfile
-  command: python manage.py runserver 0.0.0.0:8000
-  volumes:
-    - ../django_project:/home/web/django_project
-  ports:
-    - "18000:8000"
-  links:
-    - db
+  hostname: uwsgi
   environment:
-    - POSTGRES_USER=docker
-    - POSTGRES_PASSWORD=docker
+    - DATABASE_NAME=postgres
+    - DATABASE_USERNAME=docker
+    - DATABASE_PASSWORD=docker
+    - DATABASE_HOST=db
+    - DJANGO_SETTINGS_MODULE=core.prod_docker
+  volumes:
+    - ./docker/uwsgi.conf:/uwsgi.conf
+    - ../django_project:/home/web/django_project
+    - ./static:/home/web/static
+    - ./media:/home/web/media
+    - ./logs:/var/log/
+  links:
+    - db:db
+
+web:
+  image: nginx
+  hostname: nginx
+  restart: always
+  volumes:
+    - ./sites-enabled:/etc/nginx/conf.d:ro
+    - ./static:/home/web/static:ro
+    - ./media:/home/web/media:ro
+    - ./logs:/var/log/nginx
+  links:
+    - uwsgi:uwsgi
+  ports:
+    - "61201:8080"

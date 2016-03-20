@@ -1,0 +1,22 @@
+db:
+  image: kartoza/postgis:9.4-2.1
+  restart: always
+  environment:
+    - POSTGRES_USER=docker
+    - POSTGRES_PASSWORD=docker
+  volumes:
+    - ./postgresql/data:/var/lib/postgresql/data
+
+devweb:
+  build: docker
+  dockerfile: Dockerfile
+  command: python manage.py runserver 0.0.0.0:8000
+  volumes:
+    - ../django_project:/home/web/django_project
+  ports:
+    - "18000:8000"
+  links:
+    - db
+  environment:
+    - POSTGRES_USER=docker
+    - POSTGRES_PASSWORD=docker

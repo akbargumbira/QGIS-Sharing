@@ -29,8 +29,9 @@ urlpatterns = [
 
     ),
 
+    url(r'^', include('symbols.urls', namespace='symbols')),
     # Symbols
-    url(r'^symbols/', include('symbols.urls')),
+    url(r'^symbols/', include('symbols.urls', namespace='symbols')),
     # Styles
-    url(r'^styles/', include('styles.urls')),
+    url(r'^styles/', include('styles.urls', namespace='styles')),
 ]

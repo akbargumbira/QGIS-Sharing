@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns(
         'symbols.views',
-        url(r'^$','index'),
+        url(r'^$','index', name='index'),
 
         # XML Responses for desktop
         url(r'^tags.xml$','tags'),

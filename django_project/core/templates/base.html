@@ -1,9 +1,20 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>QGIS - {% block extratitle %}{% endblock %}</title>
-  <meta name="AUTHOR" content="ItOpen" />
+  <meta name="AUTHOR" content="QGIS Sharing" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="{% static "css/basic.css" %}" type="text/css" />
+    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}" type="text/css" />
+    <link rel="stylesheet" href="{% static "css/qgis-style.css" %}" type="text/css" />
+    <link rel="stylesheet" href="{% static "css/bootstrap-responsive.min.css" %}" type="text/css" />
+    <link rel="stylesheet" href="{% static "font-awesome/css/font-awesome.min.css" %}" />
+    <link rel="stylesheet"  href="{% static "css/style.css"%}" type="text/css"/>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script type="text/javascript" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+
     {% block extracss %}{% endblock %}
     {% block extrajs %}{% endblock %}
 </head>
@@ -11,13 +22,72 @@
 <body id="page_bg" {% block onload %}{% endblock %}>
     <div id="main_bg">
         {% block navigation %}
+          <div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                    <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                    </button>
+
+                    <a class="brand" href="#">QGIS</a>
+                    {% if user.is_authenticated %}
+                    <a id="user-tooltip" href="{% url "my_logout" %}" data-toggle="tooltip" data-placement="bottom" title="{{ user.username }}" style="float: right !important"><i class="icon-user icon-3x"></i></a>
+                    {% else %}
+                    <a href="{% url "my_login" %}"><i class="icon-signin
+                    icon-3x"></i></a>
+                    {% endif %}
+
+                   <div class="nav-collapse collapse">
+                      <ul class="unstyled nav main-menu">
+                          <li><a href="{% url "symbols:index" %}">Symbols</a></li>
+                          <li><a href="{% url "styles:index" %}">Styles</a></li>
+                          {% if user.is_authenticated %}
+                            <li><a href="{% url "my_logout" %}">Logout</a></li>
+                          {% else %}
+                            <li><a href="{% url "my_login" %}">Login</a></li>
+                          {% endif %}
+                          {% block navigation_extra %}
+                          {% endblock %}
+                      </ul>
+                  </div>
+              </div>
+            </div>
+         </div>
         {% endblock %}
 
-        {% block content %}
-        {% endblock %}
+        <div class="container-fluid">
+          <div class="row-fluid">
+          {% block content %}
+          {% endblock %}
 
-        {% block rightbar %}
-        {% endblock %}
+          {% block rightbar %}
+          {% endblock %}
+          </div><!-- end row fluid -->
+        </div><!-- end container fluid -->
+
+
+        <footer class="footer">
+            <div class="container">
+                <div>
+                  <ul class="unstyled inline" id="social">
+                    <li id="twitter"><a href="http://twitter.com/qgis" class="external"><div></div></a></li>
+                    <li id="facebook"><a href="https://www.facebook.com/pages/QGIS-Quantum-GIS-/298112000235096" class="external"><div></div></a></li>
+                    <li id="gplus"><a href="http://plus.google.com/communities/114776597176808981624" class="external"><div></div></a></li>
+                    <li id="github"><a href="http://github.com/qgis/" class="external"><div></div></a></li>
+                  </ul>
+                </div>
+
+                <p class="credit">All content is licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 licence (CC BY-SA)</a>.</p>
+            </div>
+            <div class="container">
+              {% block "credits" %}
+                <p class="credit">Select graphics from <a href="http://thenounproject.com" target="_blank">The Noun Project collection</a>.</p>
+              {% endblock %}
+            </div>
+        </footer>
     </div>
 </body>
 </html>

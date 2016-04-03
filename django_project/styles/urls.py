@@ -5,7 +5,7 @@ from styles.models import Style
 
 # place app url patterns here
 urlpatterns = patterns('styles.views',
-        url(r'^$','index'),
+        url(r'^$','index', name='index'),
 
         url(r'^list/$', ListView.as_view( model=Style ) ),
         url(r'^list.xml$', 'xml_list' ),

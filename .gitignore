@@ -2,4 +2,5 @@ venv
 .idea
 *.pyc
 logs
-static
+deployment/static
+deployment/media

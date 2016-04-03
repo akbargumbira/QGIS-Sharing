@@ -96,7 +96,8 @@ def add_symbol(request):
     if request.method == 'POST':
         form = SymbolUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            # Handle the file with the cleaned data.. save the symbols to the DB
+            # Handle the file with the cleaned data.. save the symbols to the
+            #  DBz
             xmlfile = request.FILES['xmlfile']
             tags = form.cleaned_data['tags']
             extract = SymbolExtractor(xmlfile)

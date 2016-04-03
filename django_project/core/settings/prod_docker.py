@@ -1,6 +1,6 @@
 """Configuration for production server"""
 # noinspection PyUnresolvedReferences
-from .settings import *  # noqa
+from .base import *  # noqa
 import os
 print os.environ
 
@@ -12,6 +12,8 @@ ADMINS = (
     ('Akbar Gumbira', 'akbargumbira@gmail.com'),
 )
 
+# Database
+# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

@@ -16,7 +16,7 @@ uwsgi:
     - DATABASE_USERNAME=docker
     - DATABASE_PASSWORD=docker
     - DATABASE_HOST=db
-    - DJANGO_SETTINGS_MODULE=core.prod_docker
+    - DJANGO_SETTINGS_MODULE=core.settings.prod_docker
   volumes:
     - ./docker/uwsgi.conf:/uwsgi.conf
     - ../django_project:/home/web/django_project

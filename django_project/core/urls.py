@@ -14,20 +14,14 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(
-        r'^accounts/login/$', 'django.contrib.auth.views.login',
-        {'template_name': 'admin/login.html'},
-        name='my_login',
-    ),
-    url(
-        r'^accounts/logout/$',
-        'django.contrib.auth.views.logout',
-        name='my_logout',
 
-    ),
+    # Authentication
+    url(r'^accounts/login/$', login, {}, name='user_login'),
+    url(r'^accounts/logout/$', logout, {}, name='user_logout'),
 
     url(r'^', include('symbols.urls', namespace='symbols')),
     # Symbols

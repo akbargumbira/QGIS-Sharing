@@ -1,3 +1,5 @@
 Django==1.8.12
-psycopg2==2.6.1
+django-auth-ldap==1.2.8
 django-taggit==0.18.0
+python-ldap==2.4.25
+psycopg2==2.6.1

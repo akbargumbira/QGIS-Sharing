@@ -102,3 +102,7 @@ STATIC_URL = '/static/'
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/media/'
+
+
+# Auth override
+from settings_auth import *
